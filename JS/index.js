@@ -1,0 +1,121 @@
+
+
+// const apiKey = '4d72860f5da04576b1d5c5d2539d919b';
+const newsContainer = document.getElementById('newsContainer');
+var country="";
+
+var link="";
+const indiaLink = document.getElementById('india');
+const usLink = document.getElementById('us');
+const russiaLink = document.getElementById('russia');
+
+indiaLink.addEventListener('click', () => {
+  country = 'in';
+  updateNews();
+});
+
+usLink.addEventListener('click', () => {
+  country = 'us';
+  updateNews();
+});
+
+russiaLink.addEventListener('click', () => {
+  country = 'ru';
+  updateNews();
+});
+
+const indiaLink1 = document.getElementById('in');
+const usLink1 = document.getElementById('usa');
+const russiaLink1 = document.getElementById('ru');
+
+indiaLink1.addEventListener('click', () => {
+  country = 'in';
+  updateNews();
+});
+
+usLink1.addEventListener('click', () => {
+  country = 'us';
+  updateNews();
+});
+
+russiaLink1.addEventListener('click', () => {
+  country = 'ru';
+  updateNews();
+});
+
+// Function to update news based on selected country
+async function updateNews() {
+  newsContainer.innerHTML = ''; // Clear existing news cards
+  link = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=4d72860f5da04576b1d5c5d2539d919b`;
+  renderNews(); // Fetch and render news for the selected country
+}
+
+ 
+
+  
+
+async function fetchNews() {
+  try {
+    // const response = await fetch(`https://newsapi.org/v2/top-headlines?country=in&apiKey=${apiKey}`);
+    const response = await fetch(link);
+    const data = await response.json();
+    return data.articles;
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    return [];
+  }
+}
+
+
+
+function createNewsCard(news) {
+  const card = document.createElement('div');
+  card.classList.add('news-card');
+
+  const image = document.createElement('img');
+  image.src = news.urlToImage;
+  image.alt = news.title;
+  card.appendChild(image);
+
+  const heading = document.createElement('h2');
+  heading.textContent = news.title;
+  card.appendChild(heading);
+
+  const subheading = document.createElement('p');
+  subheading.classList.add('bold');
+  subheading.textContent = news.description;
+  card.appendChild(subheading);
+
+  const content = document.createElement('p');
+  content.textContent = news.content ;
+  card.appendChild(content);
+
+  const link = document.createElement('a');
+  link.href = news.url; // Link to the full news article
+  link.textContent = 'Read More';
+  card.appendChild(link);
+
+  const source = document.createElement('p');
+  source.textContent = `Source: ${news.source.name}`;
+  card.appendChild(source);
+
+  const date = document.createElement('p');
+  date.textContent = new Date(news.publishedAt).toDateString();
+  card.appendChild(date);
+
+  return card;
+}
+
+// ... (rest of the code)
+
+
+async function renderNews() {
+  const newsList = await fetchNews();
+
+  newsList.forEach(news => {
+    const card = createNewsCard(news);
+    newsContainer.appendChild(card);
+  });
+}
+
+renderNews();
